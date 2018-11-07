@@ -1,0 +1,26 @@
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body" id="notes">
+        ...
+      </div>
+    </div>
+  </div>
+</div>
+{{#each art}}
+<div class="card m-4">
+  <div class="card-header bg-secondary  ">
+    <a class="text-white" href="{{this.link}}"> {{this.title}} </a>
+    <button data-toggle="modal" data-target="#myModal" class="comment btn btn-info" value = {{this._id}} >comment</button> 
+  </div>
+  <div class="card-body">
+    {{this.summary}}
+  </div>
+</div>
+
+
+{{/each}}

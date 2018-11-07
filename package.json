@@ -1,0 +1,35 @@
+{
+  "name": "NewsFinder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "handlebars": "^4.0.12",
+    "js": "^0.1.0",
+    "mongo": "^0.1.0",
+    "mongojs": "^2.6.0",
+    "mongoose": "^5.3.10",
+    "morgan": "^1.9.1",
+    "npm": "^6.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/killercodingmonkey/NewsFinder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/killercodingmonkey/NewsFinder/issues"
+  },
+  "homepage": "https://github.com/killercodingmonkey/NewsFinder#readme"
+}

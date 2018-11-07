@@ -1,8 +1,9 @@
+
 {{#each art}}
-<div class="card m-4">
-  <div class="card-header">
-    <a href="{{this.link}}"> {{this.title}} </a>
-    <button class="save">Save</button> 
+<div class="card m-4 ">
+  <div class="card-header bg-secondary  ">
+    <a class="text-white"  href="{{this.link}}"> {{this.title}} </a>
+    <button value = {{this._id}} class="save btn btn-info">Save</button> 
   </div>
   <div class="card-body">
     {{this.summary}}
