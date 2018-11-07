@@ -1,19 +1,22 @@
 var express = require("express");
+var exphbs = require("express-handlebars");
 var mongojs = require("mongojs");
 var axios = require("axios");
 var cheerio = require("cheerio");
 var app = express();
+var router = express.Router();
 app.use(express.static("public"));
 var databaseUrl = "charlotte";
 var collections = ["article"];
-
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 var db = mongojs(databaseUrl, collections);
 db.on("error", function (error) {
   console.log("Database Error:", error);
 });
-app.get("/", function (req, res) {
-  res.send("Hello world");
-});
+// app.get("/", function (req, res) {
+//   res.send("Hello world");
+// });
 
 app.get("/scrape", function (req, res) {
   axios.get("https://www.charlotteagenda.com/").then(function (response) {
@@ -43,8 +46,14 @@ app.get("/scrape", function (req, res) {
   });
   res.send("Scrape Complete");
 });
-app.get("/", function (req, res) {
-  res.send(index.html);
+app.get("/", function(req, res) {
+
+  db.article.find({ saved: false}, function(error, found) {
+      console.log(found)
+      res.render("index", { art: found });
+    
+    });
+
 });
 app.get("/api/all", function (req, res) {
   // Query: In our database, go to the animals collection, then "find" everything
@@ -61,17 +70,18 @@ app.get("/api/all", function (req, res) {
 });
 
 app.get("/saved", function (req, res) {
-  db.article.find({ saved: true }, function (error, found) {
-    console.log(found)
+
+  db.article.find({ saved: true }, function (error, saved) {
     if (error) {
       console.log(error);
     }
     else {
-      res.json(found);
+      
+      res.render("index", { art: saved });
     }
   });
 });
 
-app.listen(3000, function () {
-  console.log("App running on port 3000!");
+app.listen(8000, function () {
+  console.log("App running on port 8000!");
 });
