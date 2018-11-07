@@ -23,11 +23,11 @@ var ArticleSchema = new Schema({
   saved:{
     type: Boolean,
     required: true
+  },
+  note: {
+    type: Schema.Types.ObjectId,
+    ref: "Note"
   }
-  // note: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: "Note"
-  // }
 });
 
 // This creates our model from the above schema, using mongoose's model method
