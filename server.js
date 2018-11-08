@@ -107,36 +107,18 @@ app.get("/save/:id", function (req, res) {
 
 
 })
-app.listen((process.env.PORT || 8000), function () {
-  console.log("App running on port 8000!");
+app.listen((process.env.PORT || 8080), function () {
+  console.log("App running on port 8080!");
 });
-// app.get("/articles/:id", function (req, res) {
-//   db.article.findOne({ _id: req.params.id })
-//   //note.article
-//   .then(function (dbArticle) {
-//   // db.Note.find({ article: req.params.id })
-//     console.log("this is here", art.schema)
-//     //dbArticle.note =db.Note.find({ article: req.params.id })
-//     //console.log(dbArticle)
-//     res.json(dbArticle);
-//   })
-//   .catch(function (err) {
-//     res.json(err);
-//   });
-// });
-var arts={}
+
 app.get("/articles/:id", function (req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-  const thisId = req.params.id
-  let note
-  let article
-  Promise.all([
-   db.Note.find({article: thisId}),
-    db.article.findOne({ _id: thisId})
-  ])
-    .then(function(comms){
-      console.log(comms)
-      res.json(comms)
+  db.article.findOne({ _id: req.params.id })
+    // ..and populate all of the notes associated with it
+    .populate("note")
+    .then(function (dbArticle) {
+      // If we were able to successfully find an Article with the given id, send it back to the client
+      res.json(dbArticle);
     })
     .catch(function (err) {
       // If an error occurred, send it to the client
