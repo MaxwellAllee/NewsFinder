@@ -28,7 +28,7 @@ $(".comment").click(function () {
     $("#notes").empty();
     // Save the id from the p tag
     var thisId = $(this).attr("value");
-
+    console.log(thisId)
     // Now make an ajax call for the Article
     $.ajax({
         method: "GET",
@@ -36,23 +36,15 @@ $(".comment").click(function () {
     })
         // With that done, add the note information to the page
         .then(function (data) {
-            console.log(data);
+           console.log(data);
             // The title of the article
-            $("#notes").append("<div class='m-3'><h2>" + data.title + "</h2><div>");
-            // An input to enter a new title
+            $("#notes").append(`<div class='m-3'><h2>${data.title}</h2><div>`);
             $("#notes").append("<div>Title: <input class='m-3'id='titleinput' name='title' ><div>");
-            // A textarea to add a new note body
             $("#notes").append(" Comment: <textarea  id='bodyinput' name='body'></textarea>");
-            // A button to submit a new note, with the id of the article saved to it
-            $("#notes").append("<button class='m-3' data-id='" + data._id + "' id='savenote'>Save Note</button>");
-
-            // If there's a note in the article
-            if (data.note) {
-                // Place the title of the note in the title input
-                $("#titleinput").val(data.note.title);
-                // Place the body of the note in the body textarea
-                $("#bodyinput").val(data.note.body);
-            }
+            $("#notes").append("<button class='m-3' data-id='" + data._id + "' id='savenote'>Save Note</button>")
+            console.log("title:", data.note)
+            $("#notes").append("<div class='m-3'><h3>Comments:</h3><br>title: "+data.note.title+"</div>")
+            $("#notes").append("<div class='m-3'><br>Comment: "+data.note.body+"</div>")        
         });
 });
 
@@ -69,7 +61,8 @@ $(document).on("click", "#savenote", function () {
             // Value taken from title input
             title: $("#titleinput").val(),
             // Value taken from note textarea
-            body: $("#bodyinput").val()
+            body: $("#bodyinput").val(),
+            article: thisId
         }
     })
         // With that done

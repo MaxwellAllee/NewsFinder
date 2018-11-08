@@ -12,6 +12,7 @@ app.use(express.static("public"));
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 var db = require("./models");
+var used = []
 // db.on("error", function (error) {
 //   console.log("Database Error:", error);
 // });
@@ -40,24 +41,18 @@ app.get("/scrape", function (req, res) {
         result.link = $(element).children("h1.entry-title").children("a").attr("href");
         result.summary = $(element).children(".excerpt").text()
         result.saved = false
-        //db.article.findOne({title: result.title})
-        // .then(function(find) {
-        // console.log(find)
-        //if (find === null){
-        //   console.log(find)
-        db.article.create(result)
+        if (used.indexOf(result.title) === -1) {
+          used.push(result.title)
+          db.article.create(result)
+            .catch(function (err) { })
 
-          .catch(function (err) {
-            //console.log(err)
-            //return res.json(err);
-          })
-        //}
-        // })
+        }
       })
 
 
     })
     .then(function (dbArticle) {
+      console.log(used)
       db.article.find({ saved: false }, function (error, found) {
         //console.log(found)
         res.render("index", { art: found });
@@ -115,21 +110,39 @@ app.get("/save/:id", function (req, res) {
 app.listen((process.env.PORT || 8000), function () {
   console.log("App running on port 8000!");
 });
+// app.get("/articles/:id", function (req, res) {
+//   db.article.findOne({ _id: req.params.id })
+//   //note.article
+//   .then(function (dbArticle) {
+//   // db.Note.find({ article: req.params.id })
+//     console.log("this is here", art.schema)
+//     //dbArticle.note =db.Note.find({ article: req.params.id })
+//     //console.log(dbArticle)
+//     res.json(dbArticle);
+//   })
+//   .catch(function (err) {
+//     res.json(err);
+//   });
+// });
+var arts={}
 app.get("/articles/:id", function (req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-  db.article.findOne({ _id: req.params.id })
-    // ..and populate all of the notes associated with it
-    .populate("note")
-    .then(function (dbArticle) {
-      // If we were able to successfully find an Article with the given id, send it back to the client
-      res.json(dbArticle);
+  const thisId = req.params.id
+  let note
+  let article
+  Promise.all([
+   db.Note.find({article: thisId}),
+    db.article.findOne({ _id: thisId})
+  ])
+    .then(function(comms){
+      console.log(comms)
+      res.json(comms)
     })
     .catch(function (err) {
       // If an error occurred, send it to the client
       res.json(err);
     });
 });
-
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", function (req, res) {
   // Create a new note and pass the req.body to the entry
@@ -138,7 +151,7 @@ app.post("/articles/:id", function (req, res) {
       // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-      return db.article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+      return db.article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id });
     })
     .then(function (dbArticle) {
       // If we were able to successfully update an Article, send it back to the client
