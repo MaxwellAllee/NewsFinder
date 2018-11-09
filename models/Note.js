@@ -11,11 +11,14 @@ var NoteSchema = new Schema({
   // `body` is of type String
   body: String,
   //article: String
-  article: String
+  article: {
+    type: Schema.Types.ObjectId,
+    ref: "article"
+  }
 });
 
 // This creates our model from the above schema, using mongoose's model method
-var Note = mongoose.model("Note", NoteSchema);
+var Note = mongoose.model("Note", NoteSchema, "notes");
 
 // Export the Note model
 module.exports = Note;
