@@ -10,6 +10,7 @@ var ArticleSchema = new Schema({
     type: String,
     required: true
   },
+
   link: {
     type: String,
     required: true
@@ -22,7 +23,8 @@ var ArticleSchema = new Schema({
     type: Boolean,
     required: true
   },
-  note: [
+    // we need to make the 'notes' field an array
+  notes: [
     {
       type: Schema.Types.ObjectId,
       ref: "Note"

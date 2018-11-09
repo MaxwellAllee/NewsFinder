@@ -11,6 +11,7 @@ var NoteSchema = new Schema({
   // `body` is of type String
   body: String,
   //article: String
+  // let's reference the article here
   article: {
     type: Schema.Types.ObjectId,
     ref: "article"
